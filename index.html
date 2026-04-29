@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nebula Assault - Conquiste estrelas. Desafie deuses. Tome o trono do universo.">
+    <title>Nebula Assault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- MAIN MENU -->
+    <div id="main-menu" class="screen active">
+        <div class="menu-bg-overlay"></div>
+        <div class="menu-content">
+            <div class="title-container">
+                <h1 class="game-title">NEBULA</h1>
+                <h1 class="game-title title-accent">ASSAULT</h1>
+                <p class="tagline">Conquiste estrelas. Desafie deuses. Tome o trono do universo.</p>
+            </div>
+            <div class="menu-buttons">
+                <button id="btn-new-game" class="menu-btn primary-btn"><span class="btn-icon">▶</span> NOVA CAMPANHA</button>
+                <button id="btn-continue-game" class="menu-btn primary-btn" style="display:none;"><span class="btn-icon">💾</span> CONTINUAR JOGO <span class="continue-info" style="font-size:0.7rem;opacity:0.7;display:block;margin-top:4px;"></span></button>
+                <button id="btn-stages" class="menu-btn"><span class="btn-icon">🗺️</span> SELEÇÃO DE FASES</button>
+                <button id="btn-difficulty" class="menu-btn"><span class="btn-icon">⚙</span> DIFICULDADE: <span id="diff-label">NORMAL</span></button>
+            </div>
+            <button id="btn-controls" class="top-corner-btn left" title="Controles">🎮</button>
+            <button id="btn-tips" class="top-corner-btn right" title="Dicas & Estratégias">❓</button>
+            <p class="version-tag">Protótipo v3.0 — 40 Fases • 10 Bosses • 8 Skins • XP System</p>
+        </div>
+    </div>
+
+    <!-- STORY INTRO -->
+    <div id="story-screen" class="screen">
+        <div class="story-content">
+            <p class="story-label">TRANSMISSÃO RECEBIDA...</p>
+            <p id="story-text" class="story-text"></p>
+            <button id="btn-start-mission" class="menu-btn primary-btn" style="display:none;">
+                <span class="btn-icon">🚀</span> INICIAR MISSÃO
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTROLS SCREEN -->
+    <div id="controls-screen" class="screen">
+        <div class="controls-content">
+            <h2 class="section-title">CONTROLES</h2>
+            <div class="controls-grid">
+                <div class="control-item"><span class="key">W A S D</span><span>ou</span><span class="key">← ↑ → ↓</span><span class="control-desc">Mover nave</span></div>
+                <div class="control-item"><span class="key">ESPAÇO</span><span class="control-desc">Atirar (modo manual)</span></div>
+                <div class="control-item"><span class="key">F</span><span class="control-desc">Alternar Auto/Manual</span></div>
+                <div class="control-item"><span class="key">SHIFT</span><span class="control-desc">Ativar habilidade</span></div>
+                <div class="control-item"><span class="key">1 2 3</span><span class="control-desc">Trocar habilidade ativa</span></div>
+                <div class="control-item"><span class="key">TAB / ESC</span><span class="control-desc">Menu durante jogo</span></div>
+            </div>
+            <button id="btn-back-menu" class="menu-btn"><span class="btn-icon">◀</span> VOLTAR</button>
+        </div>
+    </div>
+
+    <!-- TIPS SCREEN -->
+    <div id="tips-screen" class="screen">
+        <div class="tips-content">
+            <h2 class="section-title">📖 DICAS & ESTRATÉGIAS</h2>
+            <div class="tips-grid" id="tips-grid"></div>
+            <button id="btn-back-tips" class="menu-btn"><span class="btn-icon">◀</span> VOLTAR AO MENU</button>
+        </div>
+    </div>
+
+    <!-- STAGES SCREEN -->
+    <div id="stages-screen" class="screen">
+        <div class="stages-content">
+            <h2 class="section-title">🗺️ SELEÇÃO DE FASES</h2>
+            <div class="stages-header-row">
+                <div class="stages-info">
+                    <span id="stages-level-info" class="stages-level">Nível 1</span>
+                    <span id="stages-progress-info" class="stages-progress">Fases desbloqueadas: 1/20</span>
+                </div>
+                <button id="btn-stages-diff" class="menu-btn stages-diff-btn"><span class="btn-icon">⚙</span> DIFICULDADE: <span id="stages-diff-label">NORMAL</span></button>
+            </div>
+            <div class="stages-grid" id="stages-grid"></div>
+            <button id="btn-back-stages" class="menu-btn"><span class="btn-icon">◀</span> VOLTAR AO MENU</button>
+        </div>
+    </div>
+
+    <!-- GAME CANVAS -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud" class="screen">
+        <div class="hud-top">
+            <div class="hud-left">
+                <div class="hud-bar-container">
+                    <span class="hud-label">HP</span>
+                    <div class="hud-bar hp-bar"><div id="hp-fill" class="hud-bar-fill"></div></div>
+                    <span id="hp-text" class="hud-value">100</span>
+                </div>
+                <div class="hud-bar-container">
+                    <span class="hud-label">ESC</span>
+                    <div class="hud-bar shield-bar"><div id="shield-fill" class="hud-bar-fill"></div></div>
+                    <span id="shield-text" class="hud-value">50</span>
+                </div>
+                <div class="hud-bar-container">
+                    <span class="hud-label">XP</span>
+                    <div class="hud-bar xp-bar"><div id="xp-fill" class="hud-bar-fill"></div></div>
+                    <span id="xp-text" class="hud-value xp-value">Nv.1</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div id="region-name" class="region-indicator">Cinturão de Asteroides</div>
+                <div id="stage-display" class="stage-indicator">FASE 1</div>
+                <div id="wave-display" class="wave-indicator">Onda 1/2</div>
+                <div id="enemies-remaining" class="enemies-indicator">Restam: 0</div>
+            </div>
+            <div class="hud-right">
+                <div class="hud-stat"><span class="hud-label">OURO</span><span id="gold-text" class="hud-value gold">0</span></div>
+                <div class="hud-stat"><span class="hud-label">COMBO</span><span id="combo-text" class="hud-value combo">x1</span></div>
+                <div class="hud-stat"><span class="hud-label">SCORE</span><span id="score-text" class="hud-value">0</span></div>
+                <div class="hud-stat"><span class="hud-label">TIRO</span><span id="fire-mode" class="hud-value fire-mode">AUTO</span></div>
+            </div>
+        </div>
+        <div class="hud-bottom">
+            <div class="hud-skills">
+                <div class="skill-slot" id="skill-1"><span class="skill-key">1</span><span class="skill-name" id="skill1-name">—</span></div>
+                <div class="skill-slot" id="skill-2"><span class="skill-key">2</span><span class="skill-name" id="skill2-name">—</span></div>
+                <div class="skill-slot" id="skill-3"><span class="skill-key">3</span><span class="skill-name" id="skill3-name">—</span></div>
+            </div>
+            <div id="assistant-status" class="assistant-info" style="display:none;">
+                <span class="assistant-icon">👾</span>
+                <span id="assistant-hp-text">Assistente: 100%</span>
+            </div>
+        </div>
+        <!-- Boss HP -->
+        <div id="boss-hud" style="display:none;">
+            <div class="boss-name-display"><span id="boss-name">???</span></div>
+            <div class="boss-bar-container"><div class="hud-bar boss-bar"><div id="boss-hp-fill" class="hud-bar-fill"></div></div></div>
+        </div>
+    </div>
+
+    <!-- IN-GAME MENU -->
+    <div id="ingame-menu" class="screen overlay">
+        <div class="ingame-menu-content">
+            <h2 class="section-title">MENU DE BATALHA</h2>
+            <div class="igm-buttons">
+                <button id="btn-igm-resume" class="menu-btn primary-btn"><span class="btn-icon">▶</span> CONTINUAR</button>
+                <button id="btn-igm-autofire" class="menu-btn"><span class="btn-icon">🔫</span> TIRO: AUTOMÁTICO</button>
+                <button id="btn-igm-quit" class="menu-btn"><span class="btn-icon">✕</span> SAIR DA MISSÃO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAUSE MENU -->
+    <div id="pause-menu" class="screen overlay">
+        <div class="pause-content">
+            <h2 class="section-title">PAUSADO</h2>
+            <button id="btn-resume" class="menu-btn primary-btn"><span class="btn-icon">▶</span> CONTINUAR</button>
+            <button id="btn-quit" class="menu-btn"><span class="btn-icon">✕</span> SAIR</button>
+        </div>
+    </div>
+
+    <!-- SHOP / HANGAR -->
+    <div id="shop-screen" class="screen">
+        <div class="shop-container">
+            <div class="shop-header">
+                <h2 class="section-title">HANGAR</h2>
+                <div class="shop-npc-speech">
+                    <span class="npc-avatar">🤖</span>
+                    <p id="shop-npc-text" class="npc-text">"Bem-vindo, piloto."</p>
+                </div>
+                <div class="shop-gold"><span class="hud-label">OURO DISPONÍVEL:</span> <span id="shop-gold-text" class="hud-value gold">0</span></div>
+            </div>
+            <div class="shop-items" id="shop-items"></div>
+            <div class="shop-skills-section">
+                <h3 class="section-subtitle">HABILIDADES EQUIPADAS (máx 3)</h3>
+                <div class="shop-skills" id="shop-skills"></div>
+            </div>
+            <div class="shop-skins-section">
+                <h3 class="section-subtitle">🚀 SKINS DE NAVE</h3>
+                <div class="skins-grid" id="shop-ship-skins"></div>
+            </div>
+            <div class="shop-skins-section">
+                <h3 class="section-subtitle">👤 SKINS DE PILOTO</h3>
+                <div class="skins-grid" id="shop-pilot-skins"></div>
+            </div>
+            <div class="shop-bottom-buttons">
+                <button id="btn-continue-mission" class="menu-btn primary-btn"><span class="btn-icon">🚀</span> PRÓXIMA MISSÃO</button>
+                <button id="btn-shop-back" class="menu-btn"><span class="btn-icon">◀</span> MENU PRINCIPAL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAGE TRANSITION -->
+    <div id="stage-transition" class="screen overlay">
+        <div class="transition-content">
+            <p class="transition-label" id="transition-label">MISSÃO CUMPRIDA</p>
+            <p class="transition-text" id="transition-text">"Você superou probabilidades impossíveis."</p>
+        </div>
+    </div>
+
+    <!-- GAME OVER -->
+    <div id="gameover-screen" class="screen">
+        <div class="gameover-content">
+            <h2 class="gameover-title">DESTRUÍDO</h2>
+            <p class="gameover-sub">Sua nave foi obliterada nas profundezas da nebulosa.</p>
+            <div class="gameover-stats">
+                <div class="stat-row"><span>Fase alcançada:</span><span id="go-stage">1</span></div>
+                <div class="stat-row"><span>Inimigos destruídos:</span><span id="go-kills">0</span></div>
+                <div class="stat-row"><span>Pontuação final:</span><span id="go-score">0</span></div>
+                <div class="stat-row"><span>Ouro coletado:</span><span id="go-gold">0</span></div>
+            </div>
+            <button id="btn-retry" class="menu-btn primary-btn"><span class="btn-icon">🔄</span> TENTAR NOVAMENTE</button>
+            <button id="btn-go-menu" class="menu-btn"><span class="btn-icon">◀</span> MENU PRINCIPAL</button>
+        </div>
+    </div>
+
+    <!-- VICTORY -->
+    <div id="victory-screen" class="screen">
+        <div class="victory-content">
+            <h2 class="victory-title">VITÓRIA</h2>
+            <p class="victory-sub" id="victory-text">O Imperador Cósmico foi derrotado. O universo é livre.</p>
+            <div class="gameover-stats">
+                <div class="stat-row"><span>Pontuação final:</span><span id="vic-score">0</span></div>
+                <div class="stat-row"><span>Inimigos destruídos:</span><span id="vic-kills">0</span></div>
+            </div>
+            <button id="btn-vic-menu" class="menu-btn primary-btn"><span class="btn-icon">◀</span> MENU PRINCIPAL</button>
+        </div>
+    </div>
+
+    <!-- BESTIARY -->
+    <div id="bestiary-modal" class="screen overlay" style="display:none;">
+        <div class="bestiary-content">
+            <h2 class="section-title">ENCICLOPÉDIA</h2>
+            <div id="bestiary-entries"></div>
+            <button id="btn-close-bestiary" class="menu-btn"><span class="btn-icon">✕</span> FECHAR</button>
+        </div>
+    </div>
+
+    <!-- LEVEL UP NOTIFICATION -->
+    <div id="levelup-notify" class="levelup-notification" style="display:none;">
+        <span class="levelup-text">⬆ NÍVEL <span id="levelup-num">2</span>!</span>
+    </div>
+
+    <script src="engine.js"></script>
+    <script src="data.js"></script>
+    <script src="entities.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
