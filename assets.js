@@ -3,6 +3,52 @@
 // ============================================================
 const SPRITES = {};
 
+// --- Optional: use external images from /img/ ---
+// If files exist in img/, they will override procedural sprites.
+// This lets you drop new enemy images without editing code.
+// Mapping is based on filename convention:
+//   scout.png -> SPRITES.scout
+//   fighter.png -> SPRITES.fighter
+//   etc.
+// You can also use e.g. enemy_scout_new.png and then add a mapping below.
+const IMG_SPRITE_MAP = {
+    player: 'player.png',
+    scout: 'scout.png',
+    fighter: 'fighter.png',
+    heavy: 'heavy.png',
+    elite: 'elite.png',
+    bomber: 'bomber.png',
+    phantom: 'phantom.png',
+    sniper: 'sniper.png',
+    paladin: 'paladin.png',
+    healer: 'healer.png',
+    boss: 'boss.png',
+    droneAttack: 'droneAttack.png',
+    droneCollector: 'droneCollector.png',
+    droneHealer: 'droneHealer.png',
+    loot: 'loot.png',
+    projectilePlayer: 'projectilePlayer.png',
+    projectileEnemy: 'projectileEnemy.png',
+    powerupHeal: 'powerupHeal.png',
+    powerupShield: 'powerupShield.png',
+    powerupFury: 'powerupFury.png',
+    asteroid: 'asteroid.png',
+    asteroidHeavy: 'asteroidHeavy.png'
+};
+
+function tryLoadSpriteFromImg(key, fileName) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            SPRITES[key] = img;
+            resolve(true);
+        };
+        img.onerror = () => resolve(false);
+        img.src = 'img/' + fileName;
+    });
+}
+
+
 function createCanvas(w, h) {
     const c = document.createElement('canvas');
     c.width = w; c.height = h;
@@ -480,7 +526,9 @@ function generateLootSprite() {
 
 // --- Load all sprites ---
 function loadAssets(callback) {
+    // Procedural defaults (fallback)
     SPRITES.player = generatePlayerSprite();
+
     SPRITES.scout = generateScoutSprite();
     SPRITES.fighter = generateFighterSprite();
     SPRITES.heavy = generateHeavySprite();
@@ -504,6 +552,17 @@ function loadAssets(callback) {
     SPRITES.asteroidHeavy = generateAsteroidSprite(true);
     SPRITES.loot = generateLootSprite();
 
-    console.log('All procedural sprites generated!');
-    if (callback) callback();
+    // Optionally override with external images if present
+    const loadPromises = [];
+    for (const [key, fileName] of Object.entries(IMG_SPRITE_MAP)) {
+        loadPromises.push(tryLoadSpriteFromImg(key, fileName));
+    }
+
+    Promise.all(loadPromises)
+        .catch(() => {})
+        .finally(() => {
+            console.log('Sprites loaded (procedural fallback + optional img overrides).');
+            if (callback) callback();
+        });
 }
+

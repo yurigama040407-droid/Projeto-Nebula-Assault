@@ -1,0 +1,404 @@
+APRESENTAÇÃO — NEBULA ASSAULT (Guia EXTENSO e completo para você falar)
+
+1) VISÃO GERAL DO JOGO
+Nebula Assault é um shooter espacial em formato de campanha por fases, com loop de combate em “ondas” e desafios em escala crescente. O jogador controla uma nave no canvas do jogo, enfrenta inimigos que aparecem em ondas, acumula recursos (principalmente ouro, score e XP), evolui com upgrades no hangar/loja e termina cada conjunto de fases com um boss. Ao avançar, novas mecânicas são desbloqueadas (habilidades, tipos de inimigos, variações de regiões, skins e sistemas como assistente e habilidades de skin).
+
+O projeto entrega uma sensação de progressão contínua: você começa em fases iniciais relativamente “controláveis” e vai caminhando para fases avançadas com mais ameaças, hazards ambientais (como chuva de meteoros e tempestade solar), bosses com padrões próprios e recompensas maiores.
+
+2) TELAS E FLUXO (o “roteiro” que o jogo segue)
+2.1 Menu principal
+No menu inicial o jogo apresenta:
+- Nome: “NEBULA ASSAULT”
+- Tagline narrativa
+- Botões para: iniciar nova campanha, continuar jogo (se houver save), seleção de fases e controle de dificuldade.
+- Botões auxiliares: controles, dicas/estratégias.
+
+Esse menu já funciona como “a abertura” da apresentação: ele explica ao público que existe campanha, progressão, dificuldade e conteúdo extra.
+
+2.2 Story / Transmissão antes da missão
+Ao clicar em “Nova Campanha”, o jogo mostra uma introdução textual (“TRANSMISSÃO RECEBIDA...”) com texto digitado aos poucos. Depois aparece o botão para “Iniciar Missão”.
+
+Em apresentação, você pode falar: “antes de atirar, o jogo contextualiza: são transmissões narrativas sorteadas que criam o clima de universo e motivação da missão”.
+
+2.3 Game Canvas + HUD
+Quando a missão começa, aparece o canvas de jogo e o HUD com sistemas centrais:
+- HP: vida
+- ESC: escudo
+- XP e nível do piloto
+- Ouro (moeda de progressão)
+- Combo: multiplicador de score
+- Score
+- Indicador de modo de tiro: AUTO ou MANUAL
+- Região do mapa (ex.: Cinturão de Asteroides)
+- Fase e onda atuais
+- Inimigos restantes
+- Boss HUD (quando boss está ativo)
+- Slots de habilidades (1,2,3) e status do “Assistente” (quando desbloqueado)
+
+Ou seja, o jogo “se explica” na tela durante a partida: você sempre entende o que está acontecendo.
+
+2.4 Onda (wave) e boss
+O combate é composto por ondas. A cada onda, inimigos são “spawneados” com contagem crescente. No fim (quando ultrapassa o limite de ondas da fase), o jogo troca para boss.
+
+- Wave spawner: mantém uma fila de inimigos com “delay” individual e tipos variados.
+- Boss spawner: ao chegar na etapa certa, o jogo chama spawnBoss() com definição própria.
+
+2.5 Fase completa → transição narrativa → Hangar
+Quando a fase termina, o jogo mostra uma tela de transição (“MISSÃO CUMPRIDA”) com mensagens variadas e indica que o jogador passou para a próxima região.
+Depois disso, abre o “Hangar” (shop) para gastar ouro em upgrades, escolher habilidades equipadas e selecionar skins.
+
+2.6 Game Over e Victory
+- Game Over: quando HP chega a 0, aparece uma tela de destruição com estatísticas (fase, kills, score, ouro coletado).
+- Victory: ao final, aparece a tela de vitória com score e kills.
+
+3) CONTROLES E COMBATE (mecânica que você deve enfatizar)
+3.1 Movimento e disparo
+- W/A/S/D e setas: mover a nave
+- Espaço: atirar (manual) — no código, isso alimenta o modo MANUAL
+- F: alternar AUTO/MANUAL
+
+Na apresentação, fale assim:
+“Eu não dependo apenas de um botão. Existe uma decisão de ritmo: AUTO para reduzir esforço e MANUAL para precisão e controle de timing, especialmente quando habilidaes e cooldowns começam a pesar”.
+
+3.2 Habilidades (SHIFT + seleção 1/2/3)
+- 1, 2, 3: escolhem qual habilidade está ativa para o acionamento
+- SHIFT: ativa a habilidade atual (com cooldown)
+
+No jogo existem múltiplas habilidades desbloqueáveis por fase (cada habilidade tem cd e duração). O HUD destaca os nomes das habilidades equipadas.
+
+3.3 Habilidade de skin
+Além das habilidades do jogador, existe a habilidade do *tipo de skin da nave*. No código:
+- Quando pressionamos a tecla E/Q (na lógica do loop) é chamado activateSkinAbility().
+
+Essas habilidades mudam completamente o estilo de jogo dependendo da skin escolhida.
+
+4) EVOLUÇÃO E SISTEMAS DE PROGRESSÃO
+4.1 XP e Level Up
+O jogo usa:
+- XP_PER_LEVEL: tabela de XP necessária por nível
+- XP_REWARDS: XP ganho por tipo de inimigo
+
+A função addXP() faz:
+- soma XP
+- enquanto xp >= XP necessário do nível atual: incrementa level, recalcula critChance, e dispara notificação “levelup-notify”.
+
+Isso é ótimo para apresentar porque você consegue “mostrar progresso” em UI: o nível aumenta e reflete na chance de crítico.
+
+4.2 Crit Chance e Crit Damage
+O código calcula:
+- chance de crítico gameState.critChance (base 0.05 + por level)
+- o dano em crítico multiplica com upgrades de critDamage.
+
+Em apresentação: “críticos tornam o DPS caótico do arcade mais recompensador; quanto mais você evolui em nível, mais consistente fica o alto dano”.
+
+4.3 Escudo (ESC) e Regen do player
+- O escudo tem regeneração gradual (no updatePlayer)
+- dano é absorvido primeiro pelo escudo e depois pelo HP.
+
+Isso cria uma identidade: você alterna postura agressiva com gerenciamento defensivo.
+
+4.4 Combo e Score multiplier
+Ao matar inimigos:
+- gameState.comboCount e comboTimer entram
+- comboMultiplier aumenta até 10
+- o score e textos de dano refletirão o multiplier
+
+Ou seja, você ganha recompensas maiores mantendo sequências de kills.
+
+5) LOOP PRINCIPAL DO JOGO (o “update” que acontece toda frame)
+O coração do gameplay está no gameLoop() em main.js:
+- Limpa canvas
+- aplica screen shake
+- desenha fundo/estrelas
+- se phase === playing:
+  - lê inputs (Shift para skill, E/Q para skin ability)
+  - alterna modo de tiro (F)
+  - abre menu com Escape/Tab
+  - decrementa timers de combo e cooldowns
+  - atualiza entidades: player, assistant, skills, projectiles, missiles
+  - atualiza inimigos e boss
+  - spawna ondas (wave spawner)
+  - checa colisões e dano
+  - atualiza loot/powerups
+  - atualiza partículas, debris, hazards
+  - atualiza HUD
+  - desenha tudo (loot, projectiles, inimigos, boss, player)
+  - decide Game Over e transições
+- se paused: desenha estado sem atualizar tudo.
+
+Para sua apresentação, isso vira um “parágrafo técnico”: “o jogo tem um loop único que gerencia simulação e renderização, garantindo consistência do gameplay”.
+
+6) INIMIGOS: TIPOS, MOVIMENTO E COMPORTAMENTO
+6.1 Tipos de inimigos existentes
+O data.js define ENEMY_TYPES e variantes por região:
+- scout
+- fighter
+- heavy
+- elite
+- bomber
+- phantom
+- sniper
+- paladin
+- healer
+
+Cada tipo tem:
+- hp base, speed, score, gold
+- cor, tamanho, formato
+- fireRate (quando atira)
+
+6.2 Spawn: wave queue e variedade
+- buildWaveQueue(stage, wave)
+  - define count pela dificuldade da fase
+  - escolhe tipos disponíveis naquele estágio
+  - escolhe caminhos (paths)
+  - empilha objetos com delay
+
+- updateWaveSpawner()
+  - incrementa timer
+  - eventualmente dispara ambush (emboscada) após certo stage e probabilidades
+  - quando waveQueue[i].delay é atingido: spawnEnemy(type, x, -30, path)
+
+Isso garante que não é “spawn aleatório total”; existe estrutura com delays.
+
+6.3 Movimento por pathType
+No updateEnemies:
+- straight: desce reto
+- sine: desce com seno em x
+- zigzag: desce e ziguezague
+- dive: desce mais agressivo após 60 frames
+- orbit: movimento em órbita (x com seno)
+- swarm: padrão em enxame (x muda senoidalmente com variação)
+
+6.4 Comportamentos especiais por tipo
+- phantom: alterna phantomAlpha (semi-invisível e menos previsível)
+- sniper: faz “linha de mira” e atira mira player
+- paladin: atira com cadence própria e restrições específicas (ex.: colisão com player dependendo do y relativo)
+- healer: quando certo timer expira, cura outros inimigos ao redor
+- bomber: explode ao morrer e causa dano em próximos
+
+Na apresentação, você pode destacar: “cada inimigo tem papel diferente: DPS constante, sniper de burst, healer de sustain, bomber de explosão, phantom de stealth tático”.
+
+7) BOSS FIGHT (o que falar MUITO)
+Os bosses são definidos em BOSS_DEFS com:
+- stage do boss (5, 8, 12, 16, 20, ... até 40)
+- nome
+- HP base
+- cor
+- patterns (ex.: spiral, spread, aimed, wave)
+- special (ex.: summon, gravity, barrier, shapeshift)
+
+7.1 SpawnBoss()
+spawnBoss(def):
+- cria boss com hp ajustado por DIFF_MULT e pela stage
+- coloca boss com entering=true e y começa fora da tela (-80)
+- ativa boss HUD e muda o estado gameState.bossActive
+
+7.2 updateBoss()
+- se boss.entering: boss entra suavemente
+- depois:
+  - boss se move em x com seno
+  - boss executa patterns quando fireTimer < 0
+  - patterns controlam direção e distribuição do fogo
+
+Patterns:
+- spiral: disparo em espiral
+- spread: cones horizontais
+- aimed: mira diretamente com variação lateral
+- wave: dispara ondas circulares
+
+Special:
+- summon: boss invoca inimigos (ex.: scouts)
+- gravity: puxa player em direção ao boss perto (mistura mecânica defensiva com posicionamento)
+- barrier e shapeshift aparecem em definições (dependem do que está implementado no updateBoss)
+
+7.3 Boss HP e fases
+Ao chegar em hpPct < 0.5, o boss muda (phase=1), aumenta agressividade e altera cor/efeito.
+
+7.4 Quando o boss morre (damageBoss)
+- boss.hp <= 0:
+  - dispara partículas/sons
+  - spawnLoot para ouro
+  - addXP(XP_REWARDS.boss)
+  - score + 500*stage
+  - set bossDefeated e prepara stageComplete()
+
+Para apresentação, isso é uma parte essencial: “boss é um encontro por padrão + especial + mudança de fase, e ele não só é ‘mais HP’: ele altera o ritmo do combate”.
+
+8) LOOT, OURO e POWERUPS
+8.1 Inimigo morto → ouro/loot
+Ao matar inimigos:
+- spawnLoot(e.x, e.y, e.gold + rand)
+- chance de powerup adicional
+
+8.2 Coleta: magnet e drones
+No updateLoot:
+- magnetRadius aumenta com upgrade magnet
+- skill “magnet” muda o pull para toda a tela (dependendo de mActive)
+- droneCollector pode atrair para um “ponto” do assistant.
+
+Isso vira uma vantagem de build: você pode decidir crescer economia e sobrevivência.
+
+8.3 Tipos de powerup
+O código define POWERUP_TYPES: heal, shield, fury.
+- heal: restaura HP com proporção
+- shield: dá escudo e tempo prolongado
+- fury: ativa gameState.activePowerups['fury'] por tempo; o efeito impacta o disparo (no updatePlayer, corta fireTimer e aumenta ritmo)
+
+9) HAZARDS AMBIENTAIS (o “jogo muda” em fases 15+)
+updateHazards roda quando stage >= 15:
+- hazardTimer decresce
+- quando termina, escolhe hazard:
+  - meteor: queda de meteoros com chance, inclusive heavy meteor
+  - solar: redução de escudo/HP em intervalos (quando hazardTimer>0)
+
+Isso cria “stress” extra e coloca o jogador sob pressão ambiental.
+
+10) HABILIDADES EQUIPADAS E SKILLS (SHIFT + 1/2/3)
+SKILL_DEFS lista habilidades:
+- shield (Escudo de Emergência)
+- slow (Tempo Lento)
+- burst (Dano Explosivo)
+- regen
+- drones
+- nova (Nova Collapse)
+- missile
+- magnet
+- overdrive
+- teleport
+
+activateSkill() implementa o efeito:
+- burst: 24 tiros em leque com 2x dano + shake + partículas
+- nova: limpa tela de inimigos e dá +50 ouro
+- missile: 3 mísseis teleguiados
+- teleport: reposiciona player e dá invencibilidade
+
+updateSkills() gerencia:
+- cooldowns
+- duração da skill ativa
+- efeitos contínuos (ex.: regen, drones atacando periodicamente)
+
+Na apresentação, o melhor é descrever o “papel” de cada habilidade:
+- defesa (shield)
+- controle (slow)
+- burst (burst/nova/missile)
+- economia (nova, magnet)
+- mobilidade (teleport)
+- scaling (regen/drones/overdrive)
+
+11) HABILIDADE DA SKIN (E/Q) — muda o estilo de jogo
+No activateSkinAbility():
+- dash: invencibilidade curta e reposicionamento vertical
+- burn: projéteis em círculo
+- stealth: invencibilidade prolongada
+- emp: desabilita timers de fogo/circuito de enemies
+- freeze: trava velocidade e desativa fogo e muda cor
+- poison: reduz HP dos inimigos percentual
+- execute: ataca o inimigo/boss mais forte (hp maior)
+- slow_motion: aumenta duração de lentidão ativa
+
+Ou seja, skins não são só estética: são um “kit de batalha”.
+
+12) ASSISTENTE (quando desbloqueia)
+gameState.assistantUnlocked é habilitado na fase 3.
+O assistant é um “drone”/aliado que:
+- pode atirar (droneAttack)
+- pode curar (droneHealer)
+- pode coletar ouro (droneCollector)
+
+O HUD mostra “Assistente: X%” e sua vida.
+
+13) HANGAR / SHOP — economia, upgrades e desbloqueios
+openShop():
+- gameState.phase='shop'
+- mostra ouro do jogador
+- renderShopItems(): cria cards de upgrades com custo escalando por nível.
+
+Upgrade items em SHOP_ITEMS (exemplos):
+- fireRate, damage, maxHp, maxShield, speed
+- multishot, magnet, armor, luck, critDamage
+- cooldown, overclock
+- droneAttack, droneCollector, droneHealer
+- lifesteal
+
+13.1 Como os upgrades funcionam no gameplay
+Os upgrades alteram:
+- stats do player (HP, shield, speed, dano)
+- tempo de recarga (cooldown)
+- critChance/critDamage indiretos
+- overclock escalonando atributos globais
+- presença e capacidade do assistant.
+
+13.2 Equipar habilidades (mão do jogador)
+renderShopSkills():
+- lista SKILL_DEFS e permite selecionar habilidades.
+- gameState.equippedSkills controla quais estão equipadas em slots.
+- O limite é 3 (porque o HUD tem 3 slots).
+
+13.3 Skins e unlock por fases
+renderShopSkins():
+- skins de nave e skins de piloto
+- desbloqueio por highestStage (fase máxima atingida)
+- compra com ouro para skins que não estão desbloqueadas
+- seleciona a skin ativa (selectedSkin / selectedPilot)
+
+Na apresentação, isso mostra “customização e recompensas” sem virar pay-to-win; o gating por fase e o gasto de ouro fazem parte do design.
+
+14) SAVE e CONTINUAR JOGO
+saveGame() salva em localStorage:
+- stage, score, gold, totalKills/Gold
+- upgrades
+- equippedSkills
+- assistantUnlocked
+- selectedSkin/selectedPilot
+- unlockedSkins/unlockedPilots
+- highestStage
+- autoFire e difficulty
+- xp, level e critChance
+
+loadGame() restaura o estado.
+
+Isso ajuda você a falar: “o jogador mantém progresso e pode voltar para continuar a campanha”.
+
+15) COMO FALAR DO JOGO “TÉCNICO + LEGAL” (roteiro pronto)
+Você pode usar este roteiro durante a apresentação:
+
+A) Abertura (20-30s)
+“Eu vou apresentar Nebula Assault, um shooter espacial de campanha por fases. O jogo combina combate em ondas, bosses com padrões únicos, evolução via XP e upgrades, e customização por skins e habilidades.”
+
+B) O loop de gameplay (40-60s)
+“O jogador entra, enfrenta ondas de inimigos que aparecem com diferentes padrões de movimento, e precisa administrar HP e escudo. A cada onda, o jogo atualiza HUD em tempo real: vida, escudo, XP e nível, ouro, combo e inimigos restantes.”
+
+C) O que torna o gameplay mais interessante (1-2 min)
+“Além de atirar, existe estratégia. O modo de tiro pode ser AUTO ou MANUAL. Existe um sistema de combo que multiplica score quando você mata em sequência. E o jogador pode usar habilidades equipadas: seleciona a habilidade com 1/2/3 e ativa com SHIFT, cada uma com cooldown e efeito diferente.”
+
+D) Encontro com boss (1-2 min — enfatize)
+“Nos bosses o jogo muda o ritmo. Cada boss tem patterns como espiral, cone, mira e ondas, além de specials como invocação e gravidade. Em uma segunda fase, quando o boss entra abaixo de 50% de HP, ele acelera e muda cor/padrão. Esse design faz o boss não ser só HP alto, mas sim um combate com fases e comportamento dinâmico.”
+
+E) Progressão e hangar (40-60s)
+“Após completar a fase, o jogo mostra uma transição narrativa e abre o Hangar. Aqui o jogador gasta ouro para melhorar atributos: dano, velocidade, escudo, vida, crítico e também upgrades de drones. Esse sistema cria builds — e prepara o jogador para as ameaças do próximo setor.”
+
+F) Conclusão (20-30s)
+“No final, Nebula Assault entrega uma experiência de arcade estratégico: rápida o suficiente para ser fluida, porém com camadas de decisão para o jogador manter controle e crescer por progressão.”
+
+16) SEÇÃO EXTRA: VOCÊ PODE TRANSFORMAR EM SLIDES
+Sugestão de divisão (para 6–8 slides):
+1. Visão geral do jogo + objetivo
+2. Telas e fluxo (menu → story → missão → shop)
+3. HUD e sistemas (HP, ESC, XP, ouro, combo)
+4. Combate e controle (AUTO/MANUAL, habilidades SHIFT)
+5. Inimigos (tipos e papéis)
+6. Bosses (patterns + special + fase 2)
+7. Loot, powerups e hazards
+8. Hangar (upgrades + skins + customização)
+
+17) ARQUIVO CONSOLIDADO (para você usar na apresentação)
+Este texto acima já foi gerado a partir da lógica contida no projeto, incluindo:
+- sistemas de ondas e bosses
+- XP/nível
+- colisoes e dano
+- loot e powerups
+- hazards
+- hangar e seleção de habilidades/skins
+
+OBS.: se você quiser, eu também posso transformar isso em “marcação de slides” (ex.: Slide 1/2/3 com bullets) a partir desse mesmo conteúdo.
+
