@@ -118,7 +118,8 @@ const SHOP_ITEMS = [
     {id:'overclock',name:'OVERCLOCK',desc:'+5% Atributos Globais',baseCost:1000,maxLvl:999,icon:'🔥'},
     {id:'droneAttack',name:'DRONE: ATAQUE',desc:'Atira automaticamente',baseCost:500,maxLvl:5,icon:'👾'},
     {id:'droneCollector',name:'DRONE: COLETA',desc:'Busca ouro longe',baseCost:800,maxLvl:5,icon:'🛸'},
-    {id:'droneHealer',name:'DRONE: REPARO',desc:'Cura aos poucos',baseCost:1200,maxLvl:5,icon:'🔧'}
+    {id:'droneHealer',name:'DRONE: REPARO',desc:'Cura aos poucos',baseCost:1200,maxLvl:5,icon:'🔧'},
+    {id:'lifesteal',name:'ROUBO DE VIDA',desc:'Cura ao dar crítico',baseCost:600,maxLvl:5,icon:'🧛'}
 ];
 
 // --- Enemies ---
@@ -130,7 +131,8 @@ const ENEMY_TYPES = {
     bomber:{hp:45,speed:0.8,score:30,gold:18,color:'#ff6e40',size:18,fireRate:0,shape:'circle'},
     phantom:{hp:70,speed:1.8,score:50,gold:30,color:'#7c4dff',size:17,fireRate:90,shape:'ghost'},
     sniper:{hp:40,speed:0.5,score:40,gold:25,color:'#ff5252',size:15,fireRate:150,shape:'diamond'},
-    paladin:{hp:150,speed:0.6,score:70,gold:40,color:'#00e5ff',size:24,fireRate:80,shape:'hex'}
+    paladin:{hp:150,speed:0.6,score:70,gold:40,color:'#00e5ff',size:24,fireRate:80,shape:'hex'},
+    healer:{hp:50,speed:0.8,score:45,gold:22,color:'#69f0ae',size:18,fireRate:0,shape:'circle'}
 };
 
 const REGION_ENEMY_VARIANTS = {
@@ -182,7 +184,7 @@ function getAvailableEnemyTypes(stage){
     if(stage>=3)types.push('fighter');if(stage>=6)types.push('heavy');
     if(stage>=9)types.push('bomber');if(stage>=12)types.push('elite');
     if(stage>=15)types.push('phantom');if(stage>=18)types.push('sniper');
-    if(stage>=22)types.push('paladin');return types;
+    if(stage>=22)types.push('paladin');if(stage>=10)types.push('healer');return types;
 }
 
 function getAvailablePaths(stage){
@@ -194,7 +196,7 @@ function getAvailablePaths(stage){
 const gameState={
     phase:'menu',stage:1,wave:0,wavesPerStage:2,score:0,gold:0,
     totalKills:0,totalGold:0,comboCount:0,comboTimer:0,comboMultiplier:1,
-    upgrades:{fireRate:0,damage:0,maxHp:0,maxShield:0,speed:0,multishot:0,magnet:0,armor:0,luck:0,critDamage:0,cooldown:0,overclock:0,droneAttack:0,droneCollector:0,droneHealer:0},
+    upgrades:{fireRate:0,damage:0,maxHp:0,maxShield:0,speed:0,multishot:0,magnet:0,armor:0,luck:0,critDamage:0,cooldown:0,overclock:0,droneAttack:0,droneCollector:0,droneHealer:0,lifesteal:0},
     equippedSkills:[0,1,5],skillCooldowns:[0,0,0],skillActive:[0,0,0],activeSkillSlot:0,
     bossActive:false,bossDefeated:false,bestiary:new Set(),
     selectedSkin:0,selectedPilot:0,unlockedSkins:[0],unlockedPilots:[0],

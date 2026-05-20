@@ -46,18 +46,28 @@ function applyScreenShake(){
 }
 function triggerShake(amount){gameState.screenShake=Math.min(gameState.screenShake+amount,20);}
 
-// --- Stars Background ---
+// --- Stars Background (Parallax) ---
 const stars=[];
-for(let i=0;i<250;i++){stars.push({x:rand(0,1920),y:rand(0,1080),s:rand(0.5,2.8),sp:rand(0.3,2.2),b:rand(0.3,1),twinkle:rand(0,Math.PI*2)});}
+for(let i=0;i<300;i++){
+    const layer=rand(1,3); // 1 = far, 3 = near
+    stars.push({x:rand(0,1920),y:rand(0,1080),s:layer*0.8,sp:layer*0.5,layer,b:rand(0.3,1),twinkle:rand(0,Math.PI*2)});
+}
 
-function updateStars(){for(const s of stars){s.y+=s.sp;s.twinkle+=0.02;if(s.y>canvas.height){s.y=-2;s.x=rand(0,canvas.width);}}}
+function updateStars(){
+    const spdMult = gameState.bossActive ? 1.5 : 1;
+    for(const s of stars){
+        s.y+=(s.sp || 0.5)*spdMult;s.twinkle+=0.02;
+        if(s.y>canvas.height){s.y=-2;s.x=rand(0,canvas.width);}
+    }
+}
 
 function drawStars(){
     const region=getRegionForStage(gameState.stage);
     for(const s of stars){
         const twinkleAlpha=s.b*(0.7+0.3*Math.sin(s.twinkle));
         ctx.globalAlpha=twinkleAlpha;ctx.fillStyle=region.starColor;
-        ctx.fillRect(s.x+shakeX,s.y+shakeY,s.s,s.s);
+        const layer = s.layer || 1;
+        ctx.fillRect(s.x+(shakeX*layer*0.2),s.y+(shakeY*layer*0.2),s.s,s.s);
     }
     ctx.globalAlpha=1;
 }

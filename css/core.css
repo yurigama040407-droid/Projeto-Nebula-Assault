@@ -1,0 +1,49 @@
+:root {
+  --bg-void: #05060f;
+  --bg-panel: rgba(8,12,30,0.85);
+  --bg-panel-light: rgba(20,28,60,0.75);
+  --accent-cyan: #00e5ff;
+  --accent-magenta: #e040fb;
+  --accent-gold: #ffd740;
+  --accent-red: #ff1744;
+  --accent-green: #69f0ae;
+  --accent-purple: #b388ff;
+  --text-primary: #e8eaf6;
+  --text-secondary: #90a4ae;
+  
+  --glow-cyan: 0 0 15px rgba(0,229,255,0.5), 0 0 40px rgba(0,229,255,0.2);
+  --glow-magenta: 0 0 15px rgba(224,64,251,0.5), 0 0 40px rgba(224,64,251,0.2);
+  --glow-gold: 0 0 15px rgba(255,215,64,0.5), 0 0 40px rgba(255,215,64,0.2);
+  
+  --font-title: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-ui: 'Exo 2', sans-serif;
+  
+  --border-glow: 1px solid rgba(0,229,255,0.25);
+  --glass-border: 1px solid rgba(255,255,255,0.1);
+  --transition-fast: 0.2s ease;
+  --transition-med: 0.4s ease;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  cursor: crosshair;
+}
+
+#game-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 1; display: block;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,229,255,0.5); }

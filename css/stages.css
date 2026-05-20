@@ -1,0 +1,45 @@
+#stages-screen {
+  flex-direction: column; align-items: center; justify-content: flex-start;
+  background: var(--bg-void); overflow-y: auto;
+}
+.stages-content { max-width: 900px; width: 90%; padding: 30px 20px; text-align: center; }
+
+.stages-header-row {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+}
+.stages-info { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.stages-level { font-family: var(--font-title); font-size: 0.9rem; color: var(--accent-purple); letter-spacing: 0.1em; }
+.stages-progress { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-secondary); letter-spacing: 0.1em; }
+
+.stages-diff-btn { min-width: auto; padding: 10px 24px; font-size: 0.85rem; }
+
+.stages-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px; margin: 20px 0;
+}
+.stage-card {
+  background: var(--bg-panel-light); border: var(--glass-border); padding: 20px 14px;
+  text-align: center; cursor: pointer; transition: all var(--transition-fast);
+  position: relative; border-radius: 8px; backdrop-filter: blur(5px);
+}
+.stage-card:hover:not(.locked) {
+  border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); transform: translateY(-3px);
+  background: rgba(0,229,255,0.05);
+}
+.stage-card.locked { opacity: 0.35; cursor: not-allowed; }
+.stage-card.locked:hover { opacity: 0.45; border-color: var(--accent-red); }
+.stage-card.completed { border-color: var(--accent-green); }
+.stage-card.current {
+  border-color: var(--accent-gold); box-shadow: var(--glow-gold);
+  background: rgba(255,215,64,0.1);
+}
+
+.stage-number { font-family: var(--font-title); font-size: 1.6rem; color: var(--accent-cyan); letter-spacing: 0.1em; }
+.stage-card.locked .stage-number { color: var(--text-secondary); }
+.stage-card.completed .stage-number { color: var(--accent-green); }
+.stage-card.current .stage-number { color: var(--accent-gold); text-shadow: var(--glow-gold); }
+
+.stage-region { font-family: var(--font-ui); font-size: 0.7rem; color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.1em; }
+.stage-lock-icon { font-size: 1.2rem; display: block; margin-top: 4px; }
+.stage-boss-tag { font-family: var(--font-title); font-size: 0.6rem; color: var(--accent-red); letter-spacing: 0.15em; margin-top: 6px; }

@@ -1,0 +1,71 @@
+#story-screen { flex-direction: column; align-items: center; justify-content: center; background: var(--bg-void); }
+.story-content { text-align: center; max-width: 700px; padding: 20px; }
+.story-label {
+  font-family: var(--font-title); font-size: 0.9rem; color: var(--accent-cyan);
+  letter-spacing: 0.3em; margin-bottom: 30px; animation: blink 1.2s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.story-text { font-family: var(--font-body); font-size: 1.4rem; line-height: 1.8; color: var(--text-primary); min-height: 120px; }
+
+#controls-screen { flex-direction: column; align-items: center; justify-content: center; background: var(--bg-void); }
+.controls-content { text-align: center; }
+.controls-grid { display: flex; flex-direction: column; gap: 16px; margin: 30px 0; }
+.control-item { display: flex; align-items: center; justify-content: center; gap: 12px; font-family: var(--font-ui); font-size: 1rem; color: var(--text-secondary); }
+.key { font-family: var(--font-title); font-size: 0.85rem; color: var(--accent-cyan); background: var(--bg-panel); border: var(--border-glow); padding: 6px 14px; letter-spacing: 0.1em; border-radius: 4px; }
+.control-desc { color: var(--text-primary); }
+
+#stage-transition { align-items: center; justify-content: center; flex-direction: column; z-index: 30; }
+.transition-content { text-align: center; }
+.transition-label { font-family: var(--font-title); font-size: 2rem; letter-spacing: 0.25em; color: var(--accent-cyan); text-shadow: var(--glow-cyan); animation: transitionFadeIn 1s ease forwards; }
+.transition-text { font-family: var(--font-body); font-size: 1.2rem; color: var(--text-secondary); margin-top: 16px; font-style: italic; animation: transitionFadeIn 1.5s ease forwards; }
+@keyframes transitionFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+#gameover-screen { flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, rgba(255,23,68,0.15), var(--bg-void) 70%); }
+.gameover-content { text-align: center; }
+.gameover-title { font-family: var(--font-title); font-size: 3.5rem; color: var(--accent-red); letter-spacing: 0.3em; text-shadow: var(--glow-red); margin-bottom: 10px; }
+.gameover-sub { font-family: var(--font-ui); font-size: 1rem; color: var(--text-secondary); margin-bottom: 30px; letter-spacing: 0.1em; }
+.gameover-stats { margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
+.stat-row { display: flex; justify-content: space-between; min-width: 320px; font-family: var(--font-ui); font-size: 1rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.stat-row span:last-child { color: var(--accent-cyan); font-family: var(--font-title); font-size: 0.95rem; }
+
+#victory-screen { flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, rgba(0,229,255,0.15), var(--bg-void) 70%); }
+.victory-content { text-align: center; }
+.victory-title { font-family: var(--font-title); font-size: 3.5rem; color: var(--accent-gold); letter-spacing: 0.3em; text-shadow: var(--glow-gold); margin-bottom: 10px; animation: titlePulse 2s ease-in-out infinite alternate; }
+.victory-sub { font-family: var(--font-ui); font-size: 1.1rem; color: var(--text-primary); margin-bottom: 30px; letter-spacing: 0.1em; }
+
+#pause-menu { align-items: center; justify-content: center; z-index: 50; }
+.pause-content { text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+
+#ingame-menu { align-items: center; justify-content: center; z-index: 55; }
+.ingame-menu-content { text-align: center; display: flex; flex-direction: column; gap: 20px; align-items: center; background: var(--bg-panel); border: var(--border-glow); padding: 40px 50px; border-radius: 8px; backdrop-filter: blur(8px); }
+.igm-buttons { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+
+#bestiary-modal { align-items: center; justify-content: center; z-index: 60; }
+.bestiary-content { background: var(--bg-panel); border: var(--border-glow); padding: 30px; max-width: 600px; width: 90%; max-height: 70vh; overflow-y: auto; text-align: center; border-radius: 8px; backdrop-filter: blur(8px); }
+#bestiary-entries { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; text-align: left; }
+.bestiary-entry { background: var(--bg-panel-light); border: var(--glass-border); padding: 12px; border-radius: 4px; }
+.bestiary-entry-name { font-family: var(--font-title); font-size: 0.8rem; color: var(--accent-cyan); letter-spacing: 0.1em; }
+.bestiary-entry-desc { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+
+#tips-screen { flex-direction: column; align-items: center; justify-content: flex-start; background: var(--bg-void); overflow-y: auto; }
+.tips-content { max-width: 900px; width: 90%; padding: 30px 20px; text-align: center; }
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin: 24px 0; }
+.tip-card { background: var(--bg-panel-light); border: var(--glass-border); padding: 18px; text-align: left; transition: all var(--transition-fast); border-radius: 8px; backdrop-filter: blur(4px); }
+.tip-card:hover { border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+.tip-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+.tip-title { font-family: var(--font-title); font-size: 0.85rem; color: var(--accent-cyan); letter-spacing: 0.1em; margin-bottom: 6px; }
+.tip-text { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* MEDIA QUERIES */
+@media(max-width:700px) {
+  .menu-btn { min-width: 260px; padding: 12px 24px; font-size: 0.9rem; }
+  .game-title { font-size: 2.5rem; }
+  .hud-bar { width: 120px; }
+  .shop-items { grid-template-columns: 1fr; }
+  .skins-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+  .boss-bar-container, .boss-bar { width: 280px; }
+  .skill-slot { min-width: 100px; padding: 6px 10px; }
+  .ingame-menu-content { padding: 24px 30px; }
+  .tips-grid { grid-template-columns: 1fr; }
+  .stages-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+}
