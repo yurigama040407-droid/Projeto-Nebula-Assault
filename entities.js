@@ -40,17 +40,40 @@ const assistant={x:0,y:0,hp:50,maxHp:50,fireTimer:0,alive:false,angle:0};
 let hazards=[], powerups=[];
 
 function resetPlayer(){
-    player.x=canvas.width/2;player.y=canvas.height-100;
+    // Recalcula posição com base no tamanho REAL do canvas
+    if(!canvas||!canvas.width||!canvas.height){
+        // fallback seguro
+        canvas = document.getElementById('game-canvas');
+    }
+    player.x=canvas.width/2;
+    player.y=canvas.height-100;
+
+    // Sempre garante valores numéricos
+    if(isNaN(player.x)||!isFinite(player.x)) player.x=400;
+    if(isNaN(player.y)||!isFinite(player.y)) player.y=Math.max(50, canvas.height-100);
+
     const oc=1+(gameState.upgrades.overclock||0)*0.05;
-    player.maxHp=(100+gameState.upgrades.maxHp*30)*oc;player.maxShield=(50+gameState.upgrades.maxShield*25)*oc;
-    player.hp=player.maxHp;player.shield=player.maxShield;
+    player.maxHp=(100+gameState.upgrades.maxHp*30)*oc;
+    player.maxShield=(50+gameState.upgrades.maxShield*25)*oc;
+    player.hp=player.maxHp;
+    player.shield=player.maxShield;
     player.speed=(5+gameState.upgrades.speed*0.8)*oc;
     player.fireRate=Math.max(3,12-gameState.upgrades.fireRate*1);
     player.damage=(12+gameState.upgrades.damage*5)*oc;
-    player.alive=true;player.invTimer=60;player.fireTimer=0;
+
+    player.alive=true;
+    player.invTimer=60;
+    player.fireTimer=0;
+
+    // Guarda contra “sumir/ir para canto” por coordenadas antigas
+    player.vx=0;
+    player.vy=0;
+    player.thrustAnim=0;
 }
 
 function updatePlayer(){
+    // Só movimenta quando o jogo está realmente em modo de combate
+    if(gameState.phase!=='playing')return;
     if(!player.alive)return;
     if(player.vx===undefined)player.vx=0;
     if(player.vy===undefined)player.vy=0;

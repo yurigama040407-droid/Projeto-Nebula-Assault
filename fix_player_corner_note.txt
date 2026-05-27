@@ -1,0 +1,2 @@
+Correção aplicada/planejada: adicionar guard para reset do player e clamp mais seguro. Verificar gameState.phase e resizeCanvas.
+
